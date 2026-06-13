@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import Titlebar from "./components/Titlebar";
+import FilePanel from "./components/FilePanel"
 import "./App.css";
 
 function App() {
@@ -13,12 +14,9 @@ function App() {
   const isLinux = platform === "linux";
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#121212]">
+    <div className="flex flex-col h-screen w-screen">
       {isLinux && <Titlebar />}
-
-      <div className={`${isLinux ? "mt-[30px]" : ""} flex-1 overflow-auto text-white p-4`}>
-        Baseline Editor
-      </div>
+      <FilePanel />
     </div>
   );
 }

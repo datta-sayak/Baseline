@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
+interface FileExplorerProps {
+  onFileSelect: (path: string) => void;
+}
+
 interface FileNode {
   name: string;
   path: string;
@@ -10,7 +14,7 @@ interface FileNode {
   children?: FileNode[];
 }
 
-function FileExplorer() {
+function FileExplorer({ onFileSelect }: FileExplorerProps) {
   const [rootNode, setRootNode] = useState<FileNode | null>(null);
   const [expandedDirs, setExpandedDirs] = useState<Set<string>>(new Set());
   const [loadingDirs, setLoadingDirs] = useState<Set<string>>(new Set());
@@ -87,7 +91,14 @@ function FileExplorer() {
           className={`flex items-center gap-1 h-6 pr-2 cursor-pointer text-sm select-none
             ${isSelected ? "bg-[#094771] text-white" : "text-[#cccccc] hover:bg-[#2a2d2e]"}`}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
-          onClick={() => node.is_dir ? toggleExpand(node.path) : setSelectedFile(node.path)}
+          onClick={() => {
+            if (node.is_dir) {
+              toggleExpand(node.path);
+            } else {
+              setSelectedFile(node.path);
+              onFileSelect(node.path);
+            }
+          }}
         >
           {/* Folder arrow */}
           {node.is_dir && (
